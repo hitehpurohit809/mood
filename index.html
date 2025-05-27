@@ -26,7 +26,7 @@
     .opening-quote {
       font-family: 'Dancing Script', cursive;
       font-size: clamp(1.1rem, 4vw, 1.4rem);
-      color: #e3536b; /* Using a theme color */
+      color: #e3536b;
       margin-bottom: 20px;
       padding: 10px;
       background-color: rgba(255, 255, 255, 0.7);
@@ -36,7 +36,7 @@
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
     h1 {
-      margin-top: 0; /* Adjusted as quote is above */
+      margin-top: 0;
       margin-bottom: 20px;
       font-size: clamp(1.6rem, 5vw, 2rem);
       color: #4a4a4a;
@@ -50,165 +50,92 @@
       margin-bottom: 25px;
     }
     .emoji-container {
-      cursor: pointer;
-      padding: 12px;
-      border-radius: 50%;
-      font-size: clamp(2.2rem, 10vw, 3rem);
-      line-height: 1;
-      color: #333;
-      filter: grayscale(75%) opacity(0.65);
-      transform: scale(0.9);
+      cursor: pointer; padding: 12px; border-radius: 50%;
+      font-size: clamp(2.2rem, 10vw, 3rem); line-height: 1; color: #333;
+      filter: grayscale(75%) opacity(0.65); transform: scale(0.9);
       transition: transform 0.25s ease-out, filter 0.25s ease-out, background-color 0.3s ease-out, box-shadow 0.3s ease-out;
     }
-    .emoji-container:hover {
-      filter: grayscale(20%) opacity(0.9);
-      transform: scale(1.05);
-    }
+    .emoji-container:hover { filter: grayscale(20%) opacity(0.9); transform: scale(1.05); }
     .emoji-container.selected {
-      filter: grayscale(0%) opacity(1);
-      transform: scale(1.20);
-      background-color: rgba(255, 139, 160, 0.2);
-      box-shadow: 0 0 20px rgba(255, 139, 160, 0.6);
+      filter: grayscale(0%) opacity(1); transform: scale(1.20);
+      background-color: rgba(255, 139, 160, 0.2); box-shadow: 0 0 20px rgba(255, 139, 160, 0.6);
     }
     .mood-info {
-      background-color: rgba(255, 255, 255, 0.93);
-      padding: 20px;
-      border-radius: 12px;
-      margin-bottom: 25px;
-      width: 100%;
-      max-width: 500px;
-      box-shadow: 0 4px 18px rgba(0,0,0,0.12);
+      background-color: rgba(255, 255, 255, 0.93); padding: 20px; border-radius: 12px;
+      margin-bottom: 25px; width: 100%; max-width: 500px; box-shadow: 0 4px 18px rgba(0,0,0,0.12);
     }
     .emotion-text {
-      font-size: clamp(1.05rem, 4vw, 1.25rem);
-      font-weight: 700;
-      margin-bottom: 10px;
-      min-height: 1.2em;
-      color: #333;
+      font-size: clamp(1.05rem, 4vw, 1.25rem); font-weight: 700; margin-bottom: 10px;
+      min-height: 1.2em; color: #333;
     }
     .quote {
-      font-style: italic;
-      color: #484848;
-      margin-bottom: 15px;
-      font-size: clamp(0.9rem, 3.5vw, 1rem);
-      min-height: 1.1em;
-      line-height: 1.55;
+      font-style: italic; color: #484848; margin-bottom: 15px;
+      font-size: clamp(0.9rem, 3.5vw, 1rem); min-height: 1.1em; line-height: 1.55;
     }
     textarea {
-      width: 100%;
-      max-width: 500px;
-      height: 130px;
-      padding: 15px;
-      border-radius: 10px;
-      border: 1px solid #d0d0d0;
-      resize: none;
-      font-size: clamp(0.95rem, 3.8vw, 1.05rem);
-      margin-bottom: 15px;
-      box-shadow: inset 0 1px 4px rgba(0,0,0,0.08);
+      width: 100%; max-width: 500px; height: 130px; padding: 15px; border-radius: 10px;
+      border: 1px solid #d0d0d0; resize: none; font-size: clamp(0.95rem, 3.8vw, 1.05rem);
+      margin-bottom: 15px; box-shadow: inset 0 1px 4px rgba(0,0,0,0.08);
       transition: border-color 0.3s, box-shadow 0.3s;
     }
-    textarea:focus {
-        border-color: #ff8ba0;
-        box-shadow: 0 0 10px rgba(255, 139, 160, 0.4);
-        outline: none;
+    textarea:focus { border-color: #ff8ba0; box-shadow: 0 0 10px rgba(255, 139, 160, 0.4); outline: none; }
+    .action-buttons {
+        display: flex; flex-direction: column; gap: 10px; align-items: center;
+        width: 100%; max-width: 500px; margin-bottom: 20px; /* Added margin for mood counter */
     }
-    .action-buttons { /* Container for save and call buttons */
-        display: flex;
-        flex-direction: column; /* Stack buttons on small screens */
-        gap: 10px; /* Space between buttons */
-        align-items: center;
-        width: 100%;
-        max-width: 500px;
-    }
-    button, .call-button { /* Apply similar base styling */
-      width: 100%; /* Make buttons take full width of container */
-      max-width: 300px; /* Max width for larger screens */
-      margin-top: 5px;
-      padding: 14px 25px; /* Adjusted padding */
-      color: white;
-      border: none;
-      border-radius: 25px;
-      cursor: pointer;
-      font-size: clamp(1rem, 4vw, 1.1rem);
-      font-weight: 600;
+    button, .call-button {
+      width: 100%; max-width: 300px; margin-top: 5px; padding: 14px 25px;
+      color: white; border: none; border-radius: 25px; cursor: pointer;
+      font-size: clamp(1rem, 4vw, 1.1rem); font-weight: 600;
       transition: transform 0.2s ease-out, box-shadow 0.2s ease-out, background-color 0.2s;
-      text-decoration: none; /* For <a> styled as button */
-      display: inline-block; /* For <a> styled as button */
+      text-decoration: none; display: inline-block;
+    }
+    @keyframes flashCallButton {
+      0%, 100% { background-color: #d9534f; box-shadow: 0 3px 7px rgba(200,50,50,0.35); transform: scale(1); }
+      50% { background-color: #e74c3c; box-shadow: 0 3px 15px rgba(220,40,40,0.6); transform: scale(1.05); }
     }
     #saveResponseButton {
       background-image: linear-gradient(45deg, #ff758c 0%, #ffc3a0 100%);
       box-shadow: 0 3px 7px rgba(255,100,130,0.35);
     }
-    #saveResponseButton:hover:not(:disabled) {
-      transform: translateY(-2px) scale(1.03);
-      box-shadow: 0 5px 12px rgba(255,100,130,0.45);
-    }
-    #saveResponseButton:active:not(:disabled) {
-        transform: translateY(0px) scale(0.98);
-        box-shadow: 0 2px 5px rgba(255,100,130,0.3);
-    }
-    #saveResponseButton:disabled {
-        background-image: none;
-        background-color: #cccccc;
-        cursor: not-allowed;
-        box-shadow: none;
-    }
-    .call-button { /* Styling for the "Can't Control" call button */
-      background-color: #d9534f; /* A distinct, urgent color like red/orange */
+    #saveResponseButton:hover:not(:disabled) { transform: translateY(-2px) scale(1.03); box-shadow: 0 5px 12px rgba(255,100,130,0.45); }
+    #saveResponseButton:active:not(:disabled) { transform: translateY(0px) scale(0.98); box-shadow: 0 2px 5px rgba(255,100,130,0.3); }
+    #saveResponseButton:disabled { background-image: none; background-color: #cccccc; cursor: not-allowed; box-shadow: none; }
+    .call-button {
+      background-color: #d9534f;
       box-shadow: 0 3px 7px rgba(200,50,50,0.35);
+      animation: flashCallButton 2s infinite ease-in-out;
     }
-    .call-button:hover {
-      background-color: #c9302c;
-      transform: translateY(-2px) scale(1.03);
-      box-shadow: 0 5px 12px rgba(200,50,50,0.45);
-    }
-    .call-button:active {
-      transform: translateY(0px) scale(0.98);
-      box-shadow: 0 2px 5px rgba(200,50,50,0.3);
-    }
+    .call-button:hover { background-color: #c9302c; transform: translateY(-2px) scale(1.03); box-shadow: 0 5px 12px rgba(200,50,50,0.45); }
+    .call-button:active { transform: translateY(0px) scale(0.98); box-shadow: 0 2px 5px rgba(200,50,50,0.3); }
     .save-status {
-        margin-top: 15px;
-        font-size: clamp(0.9rem, 3.5vw, 0.95rem);
-        color: #e3536b;
-        font-weight: bold;
-        min-height: 1.1em;
+        margin-top: 15px; font-size: clamp(0.9rem, 3.5vw, 0.95rem);
+        color: #e3536b; font-weight: bold; min-height: 1.1em;
     }
-    /* Add this to your <style> section */
-
-@keyframes flashCallButton {
-  0% {
-    background-color: #d9534f; /* Original button red */
-    box-shadow: 0 3px 7px rgba(200,50,50,0.35);
-    transform: scale(1);
-  }
-  50% {
-    background-color: #e74c3c; /* A slightly brighter or different shade of red */
-    box-shadow: 0 3px 15px rgba(220,40,40,0.6); /* More prominent shadow */
-    transform: scale(1.05); /* Slightly larger */
-  }
-  100% {
-    background-color: #d9534f; /* Back to original */
-    box-shadow: 0 3px 7px rgba(200,50,50,0.35);
-    transform: scale(1);
-  }
-}
-
-.call-button {
-  /* It will already have some styles from the previous code.
-     Make sure it has a base background-color if not already set by an image,
-     then add the animation property below.
-     If it uses background-image, the flash might look different or need adjustment.
-     Our current .call-button has a solid background-color.
-  */
-  background-color: #d9534f; /* Ensure this base color is set */
-  animation: flashCallButton 2s infinite ease-in-out; /* Apply the animation */
-  /* You can adjust '2s' to make it flash faster or slower */
-}
+    .mood-counter-section { /* New section for mood counts */
+        margin-top: 20px;
+        padding: 15px;
+        background-color: rgba(255, 255, 255, 0.85);
+        border-radius: 10px;
+        width: 100%;
+        max-width: 500px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .mood-counter-section h3 {
+        margin-top: 0;
+        margin-bottom: 10px;
+        color: #4a4a4a;
+        font-size: clamp(1rem, 4vw, 1.15rem);
+    }
+    .mood-counter-section p {
+        margin: 5px 0;
+        font-size: clamp(0.9rem, 3.5vw, 1rem);
+        color: #555;
+    }
   </style>
 </head>
 <body>
-  <div class="opening-quote" id="openingQuoteDisplay">
-    </div>
+  <div class="opening-quote" id="openingQuoteDisplay"></div>
   <h1>How Are You Feeling, My Love?</h1>
 
   <div class="emojis">
@@ -228,10 +155,15 @@
   
   <div class="action-buttons">
     <button id="saveResponseButton">Save Your Thoughts</button>
-    <a href="tel:+918905507092" class="call-button" id="callMeButton">Nahi Ho Raha Button</a>
+    <a href="tel:YOUR_PHONE_NUMBER_HERE" class="call-button" id="callMeButton">Feeling Overwhelmed? Call Me</a>
   </div>
 
   <div class="save-status" id="save-status-display"></div>
+
+  <div class="mood-counter-section" id="moodCounterSection">
+    <h3>Today's Mood Summary:</h3>
+    <p id="dailyMoodCountsDisplay">Loading today's mood counts...</p>
+  </div>
 
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
@@ -259,20 +191,17 @@
     const allEmojiElements = document.querySelectorAll(".emoji-container");
     const saveResponseButton = document.getElementById("saveResponseButton");
     const saveStatusDisplay = document.getElementById("save-status-display");
-    // const callMeButton = document.getElementById("callMeButton"); // Not strictly needed if using href directly
     const bodyElement = document.body;
+    const dailyMoodCountsDisplay = document.getElementById("dailyMoodCountsDisplay");
+
 
     let selectedMood = "";
 
     const moodSharingQuotes = [
-        "Sharing your feelings is a sign of strength, my love.",
-        "I'm always here to listen, no matter the mood.",
-        "Your emotions are valid and important to me.",
-        "Every mood you share helps me understand you more.",
-        "Never hesitate to tell me how you're truly feeling.",
-        "Your heart is safe with me; share what's in it.",
-        "Expressing yourself is a beautiful thing.",
-        "I'm here for all of it - the sunshine and the rain."
+        "Sharing your feelings is a sign of strength, my love.", "I'm always here to listen, no matter the mood.",
+        "Your emotions are valid and important to me.", "Every mood you share helps me understand you more.",
+        "Never hesitate to tell me how you're truly feeling.", "Your heart is safe with me; share what's in it.",
+        "Expressing yourself is a beautiful thing.", "I'm here for all of it - the sunshine and the rain."
     ];
 
     const moodDetails = {
@@ -283,7 +212,6 @@
       angry:   { bgColor: "#ffcccc", text: "Feeling Angry?", quote: "It's okay to feel this way. Talk to me about it. ❤️‍🔥" }
     };
 
-    // Function to display a random opening quote
     function displayRandomOpeningQuote() {
         if (openingQuoteDisplay) {
             const randomIndex = Math.floor(Math.random() * moodSharingQuotes.length);
@@ -291,23 +219,67 @@
         }
     }
 
-    // Display quote when the page loads
+    async function fetchAndDisplayDailyMoodCounts() {
+        if (!dailyMoodCountsDisplay) return;
+
+        const now = new Date();
+        const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
+        const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+
+        const moodCounts = { excited: 0, happy: 0, confused: 0, crying: 0, angry: 0 };
+        let totalToday = 0;
+
+        try {
+            const querySnapshot = await db.collection("moodEntries")
+                .where("createdAt", ">=", startOfDay)
+                .where("createdAt", "<=", endOfDay)
+                .get();
+            
+            querySnapshot.forEach((doc) => {
+                const entry = doc.data();
+                if (entry.mood && moodCounts.hasOwnProperty(entry.mood)) {
+                    moodCounts[entry.mood]++;
+                    totalToday++;
+                }
+            });
+
+            if (totalToday === 0) {
+                dailyMoodCountsDisplay.innerHTML = "No moods recorded yet for today. Share how you're feeling! 😊";
+            } else {
+                let countsHTML = "<ul>";
+                for (const mood in moodCounts) {
+                    if (moodCounts[mood] > 0) { // Only show moods that have counts
+                        countsHTML += `<li>${mood.charAt(0).toUpperCase() + mood.slice(1)}: ${moodCounts[mood]} time(s)</li>`;
+                    }
+                }
+                countsHTML += "</ul>";
+                if (countsHTML === "<ul></ul>") { // Handles case where moods recorded today aren't in our predefined list (unlikely but safe)
+                     dailyMoodCountsDisplay.innerHTML = "No specific moods counted for today.";
+                } else {
+                    dailyMoodCountsDisplay.innerHTML = countsHTML;
+                }
+            }
+        } catch (error) {
+            console.error("Error fetching daily mood counts: ", error);
+            dailyMoodCountsDisplay.innerHTML = "Could not load today's mood counts.";
+        }
+    }
+
+
     document.addEventListener('DOMContentLoaded', () => {
         displayRandomOpeningQuote();
-        checkSaveButtonState(); // Initial check for the save button
+        fetchAndDisplayDailyMoodCounts(); // Fetch and display mood counts on load
+        checkSaveButtonState();
     });
 
     allEmojiElements.forEach(emojiContainer => {
       emojiContainer.addEventListener("click", () => {
         allEmojiElements.forEach(el => el.classList.remove("selected"));
         emojiContainer.classList.add("selected");
-
         selectedMood = emojiContainer.dataset.mood;
         const moodInfo = moodDetails[selectedMood];
-
         bodyElement.style.backgroundColor = moodInfo.bgColor;
         bodyElement.style.backgroundImage = 'none';
-
         emotionTextDisplay.innerText = moodInfo.text;
         quoteDisplay.innerText = moodInfo.quote;
         babesResponseInput.placeholder = `Share more about feeling ${moodInfo.text.toLowerCase().replace(/[!?]/g,'')}...`;
@@ -323,16 +295,8 @@
       const herResponse = babesResponseInput.value;
       const date = new Date().toLocaleString(); 
 
-      if (!selectedMood) {
-        saveStatusDisplay.textContent = "Please pick a mood first, my darling!";
-        setTimeout(() => saveStatusDisplay.textContent = "", 3000);
-        return;
-      }
-      if (!herResponse.trim()) {
-        saveStatusDisplay.textContent = "Please share a little something, beautiful! 💖";
-        setTimeout(() => saveStatusDisplay.textContent = "", 3000);
-        return;
-      }
+      if (!selectedMood) { /* ... validation ... */ return; }
+      if (!herResponse.trim()) { /* ... validation ... */ return; }
 
       saveResponseButton.disabled = true;
       saveResponseButton.textContent = "Saving...";
@@ -348,6 +312,7 @@
         console.log("Document written to Firebase with ID: ", docRef.id);
         saveStatusDisplay.textContent = "Got it! Your thoughts are safe with me, my love 💖";
         babesResponseInput.value = ""; 
+        fetchAndDisplayDailyMoodCounts(); // Refresh mood counts after saving a new one
       })
       .catch((error) => {
         console.error("Error adding document to Firebase: ", error); 
@@ -359,9 +324,6 @@
         setTimeout(() => saveStatusDisplay.textContent = "", 5000);
       });
     });
-
-    // Note: The call button uses a direct href="tel:..." so it doesn't strictly need a JS listener
-    // unless you wanted to add more complex behavior or analytics.
   </script>
 </body>
 </html>
