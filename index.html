@@ -173,6 +173,37 @@
         font-weight: bold;
         min-height: 1.1em;
     }
+    /* Add this to your <style> section */
+
+@keyframes flashCallButton {
+  0% {
+    background-color: #d9534f; /* Original button red */
+    box-shadow: 0 3px 7px rgba(200,50,50,0.35);
+    transform: scale(1);
+  }
+  50% {
+    background-color: #e74c3c; /* A slightly brighter or different shade of red */
+    box-shadow: 0 3px 15px rgba(220,40,40,0.6); /* More prominent shadow */
+    transform: scale(1.05); /* Slightly larger */
+  }
+  100% {
+    background-color: #d9534f; /* Back to original */
+    box-shadow: 0 3px 7px rgba(200,50,50,0.35);
+    transform: scale(1);
+  }
+}
+
+.call-button {
+  /* It will already have some styles from the previous code.
+     Make sure it has a base background-color if not already set by an image,
+     then add the animation property below.
+     If it uses background-image, the flash might look different or need adjustment.
+     Our current .call-button has a solid background-color.
+  */
+  background-color: #d9534f; /* Ensure this base color is set */
+  animation: flashCallButton 2s infinite ease-in-out; /* Apply the animation */
+  /* You can adjust '2s' to make it flash faster or slower */
+}
   </style>
 </head>
 <body>
