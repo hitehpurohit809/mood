@@ -13,30 +13,62 @@
     body {
       margin: 0;
       font-family: "Quicksand", "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      text-align: center;
+      background-color: #fdf0f5; /* Fallback body background, useful if splash fails */
+    }
+
+    #splash-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #fce4ec; /* A soft, welcoming splash background */
       display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000; /* Ensure it's on top */
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 1.2s ease-in-out, visibility 1.2s ease-in-out; /* Smoother fade */
+      padding: 20px;
+    }
+
+    #splash-screen.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .opening-quote { /* Styles for the quote on the splash screen */
+      font-family: 'Dancing Script', cursive;
+      font-size: clamp(1.7rem, 6vw, 2.5rem); /* Larger for splash emphasis */
+      color: #c2185b; /* Darker, elegant pink */
+      margin-bottom: 20px;
+      padding: 20px;
+      background-color: rgba(255, 255, 255, 0.85);
+      border-radius: 12px;
+      max-width: 90%;
+      width: auto; /* Let content define width up to max-width */
+      min-width: 300px; /* Ensure it's not too squished */
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    #main-app-content {
+      display: none; /* Initially hidden */
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
       min-height: 100vh;
-      background-color: #fdf0f5; /* Default soft pink background */
-      transition: background-color 0.75s ease-in-out;
-      padding: 15px;
-      text-align: center;
-    }
-    .opening-quote {
-      font-family: 'Dancing Script', cursive;
-      font-size: clamp(1.1rem, 4vw, 1.4rem);
-      color: #e3536b;
-      margin-bottom: 20px;
-      padding: 10px;
-      background-color: rgba(255, 255, 255, 0.7);
-      border-radius: 8px;
       width: 100%;
-      max-width: 500px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      padding: 15px;
+      background-color: #fdf0f5; /* Default app background, changes with mood */
+      transition: background-color 0.75s ease-in-out;
     }
+    
     h1 {
-      margin-top: 0;
+      margin-top: 15px;
       margin-bottom: 20px;
       font-size: clamp(1.6rem, 5vw, 2rem);
       color: #4a4a4a;
@@ -81,7 +113,7 @@
     textarea:focus { border-color: #ff8ba0; box-shadow: 0 0 10px rgba(255, 139, 160, 0.4); outline: none; }
     .action-buttons {
         display: flex; flex-direction: column; gap: 10px; align-items: center;
-        width: 100%; max-width: 500px; margin-bottom: 20px; /* Added margin for mood counter */
+        width: 100%; max-width: 500px; margin-bottom: 20px;
     }
     button, .call-button {
       width: 100%; max-width: 300px; margin-top: 5px; padding: 14px 25px;
@@ -112,78 +144,80 @@
         margin-top: 15px; font-size: clamp(0.9rem, 3.5vw, 0.95rem);
         color: #e3536b; font-weight: bold; min-height: 1.1em;
     }
-    .mood-counter-section { /* New section for mood counts */
-        margin-top: 20px;
-        padding: 15px;
-        background-color: rgba(255, 255, 255, 0.85);
-        border-radius: 10px;
-        width: 100%;
-        max-width: 500px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    .mood-counter-section {
+        margin-top: 20px; padding: 15px; background-color: rgba(255, 255, 255, 0.85);
+        border-radius: 10px; width: 100%; max-width: 500px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
     .mood-counter-section h3 {
-        margin-top: 0;
-        margin-bottom: 10px;
-        color: #4a4a4a;
-        font-size: clamp(1rem, 4vw, 1.15rem);
+        margin-top: 0; margin-bottom: 10px; color: #4a4a4a; font-size: clamp(1rem, 4vw, 1.15rem);
     }
-    .mood-counter-section p {
-        margin: 5px 0;
-        font-size: clamp(0.9rem, 3.5vw, 1rem);
-        color: #555;
+    .mood-counter-section p, .mood-counter-section ul, .mood-counter-section li {
+        margin: 5px 0; font-size: clamp(0.9rem, 3.5vw, 1rem); color: #555;
+        list-style-position: inside; padding-left: 0;
     }
+     .mood-counter-section ul { padding-left: 10px; }
   </style>
 </head>
 <body>
-  <div class="opening-quote" id="openingQuoteDisplay"></div>
-  <h1>How Are You Feeling, My Love?</h1>
 
-  <div class="emojis">
-    <div class="emoji-container" data-mood="excited">🤩</div>
-    <div class="emoji-container" data-mood="happy">😊</div>
-    <div class="emoji-container" data-mood="confused">😕</div>
-    <div class="emoji-container" data-mood="crying">😢</div>
-    <div class="emoji-container" data-mood="angry">😠</div>
+  <div id="splash-screen">
+    <div class="opening-quote" id="openingQuoteDisplay">
+      </div>
   </div>
 
-  <div class="mood-info">
-    <div class="emotion-text" id="emotion-text-display">Select how you're feeling above</div>
-    <div class="quote" id="quote-display">Every feeling of yours is so important to me 💖</div>
-  </div>
+  <div id="main-app-content">
+    <h1>How Are You Feeling, My Love?</h1>
 
-  <textarea id="babesResponseInput" placeholder="Share your thoughts here, my beautiful..."></textarea>
-  
-  <div class="action-buttons">
-    <button id="saveResponseButton">Save Your Thoughts</button>
-    <a href="tel:YOUR_PHONE_NUMBER_HERE" class="call-button" id="callMeButton">Feeling Overwhelmed? Call Me</a>
-  </div>
+    <div class="emojis">
+      <div class="emoji-container" data-mood="excited">🤩</div>
+      <div class="emoji-container" data-mood="happy">😊</div>
+      <div class="emoji-container" data-mood="confused">😕</div>
+      <div class="emoji-container" data-mood="crying">😢</div>
+      <div class="emoji-container" data-mood="angry">😠</div>
+    </div>
 
-  <div class="save-status" id="save-status-display"></div>
+    <div class="mood-info">
+      <div class="emotion-text" id="emotion-text-display">Select how you're feeling above</div>
+      <div class="quote" id="quote-display">Every feeling of yours is so important to me 💖</div>
+    </div>
 
-  <div class="mood-counter-section" id="moodCounterSection">
-    <h3>Today's Mood Summary:</h3>
-    <p id="dailyMoodCountsDisplay">Loading today's mood counts...</p>
+    <textarea id="babesResponseInput" placeholder="Share your thoughts here, my beautiful..."></textarea>
+    
+    <div class="action-buttons">
+      <button id="saveResponseButton">Save Your Thoughts</button>
+      <a href="tel:+918905507092" class="call-button" id="callMeButton">Nahi Ho Raha</a>
+    </div>
+
+    <div class="save-status" id="save-status-display"></div>
+
+    <div class="mood-counter-section" id="moodCounterSection">
+      <h3>Today's Mood Summary:</h3>
+      <p id="dailyMoodCountsDisplay">Loading today's mood counts...</p>
+    </div>
   </div>
 
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 
   <script>
-    // Your web app's Firebase configuration
+    // IMPORTANT: Replace with your Firebase project's configuration
     const firebaseConfig = {
-      apiKey: "AIzaSyCHqhrAzrqHOZwZw0r8b-iAzAqq3sGSiB0", // YOUR ACTUAL API KEY
-      authDomain: "test-26-05.firebaseapp.com",       // YOUR ACTUAL AUTH DOMAIN
-      projectId: "test-26-05",                        // YOUR ACTUAL PROJECT ID
-      storageBucket: "test-26-05.firebasestorage.app",// YOUR ACTUAL STORAGE BUCKET
-      messagingSenderId: "372804768059",              // YOUR ACTUAL SENDER ID
-      appId: "1:372804768059:web:b992f4fdc09ed3ea84671e", // YOUR ACTUAL APP ID
-      measurementId: "G-RG2RZ8K4QB"                   // YOUR ACTUAL MEASUREMENT ID (Optional for Firestore)
+      apiKey: "AIzaSyCHqhrAzrqHOZwZw0r8b-iAzAqq3sGSiB0",
+      authDomain: "test-26-05.firebaseapp.com",
+      projectId: "test-26-05",
+      storageBucket: "test-26-05.firebasestorage.app",
+      messagingSenderId: "372804768059",
+      appId: "1:372804768059:web:b992f4fdc09ed3ea84671e",
+      measurementId: "G-RG2RZ8K4QB"
     };
 
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
+    // Get DOM elements
+    const splashScreen = document.getElementById("splash-screen");
+    const mainAppContent = document.getElementById("main-app-content");
     const openingQuoteDisplay = document.getElementById("openingQuoteDisplay");
     const emotionTextDisplay = document.getElementById("emotion-text-display");
     const quoteDisplay = document.getElementById("quote-display");
@@ -191,9 +225,7 @@
     const allEmojiElements = document.querySelectorAll(".emoji-container");
     const saveResponseButton = document.getElementById("saveResponseButton");
     const saveStatusDisplay = document.getElementById("save-status-display");
-    const bodyElement = document.body;
     const dailyMoodCountsDisplay = document.getElementById("dailyMoodCountsDisplay");
-
 
     let selectedMood = "";
 
@@ -216,12 +248,19 @@
         if (openingQuoteDisplay) {
             const randomIndex = Math.floor(Math.random() * moodSharingQuotes.length);
             openingQuoteDisplay.innerHTML = `"${moodSharingQuotes[randomIndex]}"`;
+            // console.log("Opening quote displayed."); // For debugging
+        } else {
+            console.error("openingQuoteDisplay element not found!");
         }
     }
 
     async function fetchAndDisplayDailyMoodCounts() {
-        if (!dailyMoodCountsDisplay) return;
-
+        if (!dailyMoodCountsDisplay) {
+            // console.error("dailyMoodCountsDisplay element not found!"); // For debugging
+            return;
+        }
+        // console.log("Fetching daily mood counts..."); // For debugging
+        // ... (rest of the function remains the same)
         const now = new Date();
         const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0);
         const endOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
@@ -248,28 +287,56 @@
             } else {
                 let countsHTML = "<ul>";
                 for (const mood in moodCounts) {
-                    if (moodCounts[mood] > 0) { // Only show moods that have counts
+                    if (moodCounts[mood] > 0) {
                         countsHTML += `<li>${mood.charAt(0).toUpperCase() + mood.slice(1)}: ${moodCounts[mood]} time(s)</li>`;
                     }
                 }
                 countsHTML += "</ul>";
-                if (countsHTML === "<ul></ul>") { // Handles case where moods recorded today aren't in our predefined list (unlikely but safe)
+                if (countsHTML === "<ul></ul>") { 
                      dailyMoodCountsDisplay.innerHTML = "No specific moods counted for today.";
                 } else {
                     dailyMoodCountsDisplay.innerHTML = countsHTML;
                 }
             }
+            // console.log("Daily mood counts displayed."); // For debugging
         } catch (error) {
             console.error("Error fetching daily mood counts: ", error);
             dailyMoodCountsDisplay.innerHTML = "Could not load today's mood counts.";
         }
     }
 
-
     document.addEventListener('DOMContentLoaded', () => {
+        // console.log("DOM fully loaded."); // For debugging
+        
+        // Ensure elements are found before using them
+        if (!splashScreen || !mainAppContent || !openingQuoteDisplay) {
+            console.error("Crucial page elements for splash/main content are missing! Check IDs.");
+            // Fallback: hide splash and show main content if splash elements are missing to prevent blank page
+            if(splashScreen) splashScreen.style.display = 'none';
+            if(mainAppContent) mainAppContent.style.display = 'flex';
+            return; // Stop further execution if critical elements are missing
+        }
+
         displayRandomOpeningQuote();
-        fetchAndDisplayDailyMoodCounts(); // Fetch and display mood counts on load
         checkSaveButtonState();
+        fetchAndDisplayDailyMoodCounts();
+
+        // console.log("Splash screen timeout starting."); // For debugging
+        setTimeout(() => {
+            // console.log("Timeout reached. Adding 'hidden' to splash screen."); // For debugging
+            splashScreen.classList.add('hidden');
+            mainAppContent.style.display = 'flex';
+        }, 3500); // Show splash for 3.5 seconds
+
+        splashScreen.addEventListener('transitionend', (event) => {
+            // Make sure the event is for the opacity or visibility property if multiple transitions exist
+            if (event.propertyName === 'opacity' || event.propertyName === 'visibility') {
+                if (splashScreen.classList.contains('hidden')) {
+                    splashScreen.style.display = 'none';
+                    // console.log("Splash screen transition ended, display set to none."); // For debugging
+                }
+            }
+        });
     });
 
     allEmojiElements.forEach(emojiContainer => {
@@ -278,8 +345,13 @@
         emojiContainer.classList.add("selected");
         selectedMood = emojiContainer.dataset.mood;
         const moodInfo = moodDetails[selectedMood];
-        bodyElement.style.backgroundColor = moodInfo.bgColor;
-        bodyElement.style.backgroundImage = 'none';
+        
+        if(mainAppContent) { // Ensure mainAppContent exists before styling
+            mainAppContent.style.backgroundColor = moodInfo.bgColor;
+        } else {
+            console.error("mainAppContent element not found for background color change!");
+        }
+
         emotionTextDisplay.innerText = moodInfo.text;
         quoteDisplay.innerText = moodInfo.quote;
         babesResponseInput.placeholder = `Share more about feeling ${moodInfo.text.toLowerCase().replace(/[!?]/g,'')}...`;
@@ -288,15 +360,25 @@
     });
 
     function checkSaveButtonState() {
-        saveResponseButton.disabled = !selectedMood;
+        if(saveResponseButton) { // Ensure button exists
+            saveResponseButton.disabled = !selectedMood;
+        }
     }
 
     saveResponseButton.addEventListener("click", () => {
       const herResponse = babesResponseInput.value;
       const date = new Date().toLocaleString(); 
 
-      if (!selectedMood) { /* ... validation ... */ return; }
-      if (!herResponse.trim()) { /* ... validation ... */ return; }
+      if (!selectedMood) {
+        saveStatusDisplay.textContent = "Please pick a mood first, my darling!";
+        setTimeout(() => saveStatusDisplay.textContent = "", 3000);
+        return;
+      }
+      if (!herResponse.trim()) {
+        saveStatusDisplay.textContent = "Please share a little something, beautiful! 💖";
+        setTimeout(() => saveStatusDisplay.textContent = "", 3000);
+        return;
+      }
 
       saveResponseButton.disabled = true;
       saveResponseButton.textContent = "Saving...";
@@ -312,15 +394,17 @@
         console.log("Document written to Firebase with ID: ", docRef.id);
         saveStatusDisplay.textContent = "Got it! Your thoughts are safe with me, my love 💖";
         babesResponseInput.value = ""; 
-        fetchAndDisplayDailyMoodCounts(); // Refresh mood counts after saving a new one
+        fetchAndDisplayDailyMoodCounts(); // Refresh mood counts
       })
       .catch((error) => {
         console.error("Error adding document to Firebase: ", error); 
         saveStatusDisplay.textContent = "Oh no! Couldn't save right now. Maybe try again? ❤️";
       })
       .finally(() => {
-        saveResponseButton.disabled = !selectedMood; 
-        saveResponseButton.textContent = "Save Your Thoughts";
+        if(saveResponseButton) { // Ensure button exists
+            saveResponseButton.disabled = !selectedMood; 
+            saveResponseButton.textContent = "Save Your Thoughts";
+        }
         setTimeout(() => saveStatusDisplay.textContent = "", 5000);
       });
     });
