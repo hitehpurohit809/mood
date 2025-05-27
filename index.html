@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Babes Mood Tracker</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      background-color: #fdf0f5; /* Default soft pink background */
+      transition: background-color 0.75s ease-in-out;
+      padding: 15px;
+      text-align: center;
+    }
+    h1 {
+      margin-top: 15px;
+      margin-bottom: 20px;
+      font-size: clamp(1.6rem, 5vw, 2rem);
+      color: #4a4a4a;
+      font-weight: 600;
+    }
+    .emojis {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 25px;
+    }
+    .emoji-container {
+      cursor: pointer;
+      padding: 12px;
+      border-radius: 50%;
+      font-size: clamp(2.2rem, 10vw, 3rem);
+      line-height: 1;
+      color: #333;
+      filter: grayscale(75%) opacity(0.65);
+      transform: scale(0.9);
+      transition: transform 0.25s ease-out, filter 0.25s ease-out, background-color 0.3s ease-out, box-shadow 0.3s ease-out;
+    }
+    .emoji-container:hover {
+      filter: grayscale(20%) opacity(0.9);
+      transform: scale(1.05);
+    }
+    .emoji-container.selected {
+      filter: grayscale(0%) opacity(1);
+      transform: scale(1.20);
+      background-color: rgba(255, 139, 160, 0.2);
+      box-shadow: 0 0 20px rgba(255, 139, 160, 0.6);
+    }
+    .mood-info {
+      background-color: rgba(255, 255, 255, 0.93);
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 25px;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.12);
+    }
+    .emotion-text {
+      font-size: clamp(1.05rem, 4vw, 1.25rem);
+      font-weight: 700;
+      margin-bottom: 10px;
+      min-height: 1.2em;
+      color: #333;
+    }
+    .quote {
+      font-style: italic;
+      color: #484848;
+      margin-bottom: 15px;
+      font-size: clamp(0.9rem, 3.5vw, 1rem);
+      min-height: 1.1em;
+      line-height: 1.55;
+    }
+    textarea {
+      width: 100%;
+      max-width: 500px;
+      height: 130px;
+      padding: 15px;
+      border-radius: 10px;
+      border: 1px solid #d0d0d0;
+      resize: none;
+      font-size: clamp(0.95rem, 3.8vw, 1.05rem);
+      margin-bottom: 15px;
+      box-shadow: inset 0 1px 4px rgba(0,0,0,0.08);
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    textarea:focus {
+        border-color: #ff8ba0;
+        box-shadow: 0 0 10px rgba(255, 139, 160, 0.4);
+        outline: none;
+    }
+    button {
+      margin-top: 5px;
+      padding: 14px 30px;
+      background-image: linear-gradient(45deg, #ff758c 0%, #ffc3a0 100%);
+      color: white;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: clamp(1rem, 4vw, 1.1rem);
+      font-weight: 600;
+      transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+      box-shadow: 0 3px 7px rgba(255,100,130,0.35);
+    }
+    button:hover:not(:disabled) {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 5px 12px rgba(255,100,130,0.45);
+    }
+    button:active:not(:disabled) {
+        transform: translateY(0px) scale(0.98);
+        box-shadow: 0 2px 5px rgba(255,100,130,0.3);
+    }
+    button:disabled {
+        background-image: none;
+        background-color: #cccccc;
+        cursor: not-allowed;
+        box-shadow: none;
+    }
+    .save-status {
+        margin-top: 15px;
+        font-size: clamp(0.9rem, 3.5vw, 0.95rem);
+        color: #e3536b;
+        font-weight: bold;
+        min-height: 1.1em;
+    }
+  </style>
+</head>
+<body>
+  <h1>How Are You Feeling, My Love?</h1>
+
+  <div class="emojis">
+    <div class="emoji-container" data-mood="excited">🤩</div>
+    <div class="emoji-container" data-mood="happy">😊</div>
+    <div class="emoji-container" data-mood="confused">😕</div>
+    <div class="emoji-container" data-mood="crying">😢</div>
+    <div class="emoji-container" data-mood="angry">😠</div>
+  </div>
+
+  <div class="mood-info">
+    <div class="emotion-text" id="emotion-text-display">Select how you're feeling above</div>
+    <div class="quote" id="quote-display">Every feeling of yours is so important to me 💖</div>
+  </div>
+
+  <textarea id="babesResponseInput" placeholder="Share your thoughts here, my beautiful..."></textarea>
+  <button id="saveResponseButton">Save Your Thoughts</button>
+  <div class="save-status" id="save-status-display"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
+  <script>
+    // Your web app's Firebase configuration (FROM YOUR FIREBASE PROJECT)
+    // Make sure to replace these placeholders with your actual Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyCHqhrAzrqHOZwZw0r8b-iAzAqq3sGSiB0", // YOUR ACTUAL API KEY
+      authDomain: "test-26-05.firebaseapp.com",       // YOUR ACTUAL AUTH DOMAIN
+      projectId: "test-26-05",                        // YOUR ACTUAL PROJECT ID
+      storageBucket: "test-26-05.firebasestorage.app",// YOUR ACTUAL STORAGE BUCKET
+      messagingSenderId: "372804768059",              // YOUR ACTUAL SENDER ID
+      appId: "1:372804768059:web:b992f4fdc09ed3ea84671e", // YOUR ACTUAL APP ID
+      measurementId: "G-RG2RZ8K4QB"                   // YOUR ACTUAL MEASUREMENT ID (Optional for Firestore)
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore(); // Get a Firestore database instance
+
+    const emotionTextDisplay = document.getElementById("emotion-text-display");
+    const quoteDisplay = document.getElementById("quote-display");
+    const babesResponseInput = document.getElementById("babesResponseInput");
+    const allEmojiElements = document.querySelectorAll(".emoji-container");
+    const saveResponseButton = document.getElementById("saveResponseButton");
+    const saveStatusDisplay = document.getElementById("save-status-display");
+    const bodyElement = document.body;
+
+    let selectedMood = "";
+
+    const moodDetails = {
+      excited: { bgColor: "#fff1c9", text: "Excited!", quote: "So thrilled to see you shining so bright! ✨" },
+      happy:   { bgColor: "#fceabb", text: "Happy!", quote: "Your happiness makes my whole world brighter! 😄" },
+      confused:{ bgColor: "#e0e0ff", text: "A Bit Confused?", quote: "It's okay to feel unsure, I'm here with you. 💭" },
+      crying:  { bgColor: "#cce2ff", text: "Feeling Sad...", quote: "It's okay to cry, my love. Let it out, I'm listening. 💔" },
+      angry:   { bgColor: "#ffcccc", text: "Feeling Angry?", quote: "It's okay to feel this way. Talk to me about it. ❤️‍🔥" }
+    };
+
+    allEmojiElements.forEach(emojiContainer => {
+      emojiContainer.addEventListener("click", () => {
+        allEmojiElements.forEach(el => el.classList.remove("selected"));
+        emojiContainer.classList.add("selected");
+
+        selectedMood = emojiContainer.dataset.mood;
+        const moodInfo = moodDetails[selectedMood];
+
+        bodyElement.style.backgroundColor = moodInfo.bgColor;
+        bodyElement.style.backgroundImage = 'none';
+
+        emotionTextDisplay.innerText = moodInfo.text;
+        quoteDisplay.innerText = moodInfo.quote;
+        babesResponseInput.placeholder = `Share more about feeling ${moodInfo.text.toLowerCase().replace(/[!?]/g,'')}...`;
+        checkSaveButtonState();
+      });
+    });
+
+    function checkSaveButtonState() {
+        saveResponseButton.disabled = !selectedMood;
+    }
+    checkSaveButtonState();
+
+    saveResponseButton.addEventListener("click", () => {
+      const herResponse = babesResponseInput.value;
+      const date = new Date().toLocaleString(); 
+
+      if (!selectedMood) {
+        saveStatusDisplay.textContent = "Please pick a mood first, my darling!";
+        setTimeout(() => saveStatusDisplay.textContent = "", 3000);
+        return;
+      }
+      if (!herResponse.trim()) {
+        saveStatusDisplay.textContent = "Please share a little something, beautiful! 💖";
+        setTimeout(() => saveStatusDisplay.textContent = "", 3000);
+        return;
+      }
+
+      saveResponseButton.disabled = true;
+      saveResponseButton.textContent = "Saving...";
+      saveStatusDisplay.textContent = "";
+
+      // --- This is the Firebase Saving Logic ---
+      db.collection("moodEntries").add({
+        mood: selectedMood,
+        note: herResponse,
+        displayTimestamp: date, 
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      })
+      .then((docRef) => {
+        console.log("Document written to Firebase with ID: ", docRef.id);
+        saveStatusDisplay.textContent = "Got it! Your thoughts are safe with me, my love 💖";
+        babesResponseInput.value = ""; 
+      })
+      .catch((error) => {
+        console.error("Error adding document to Firebase: ", error); 
+        saveStatusDisplay.textContent = "Oh no! Couldn't save right now. Maybe try again? ❤️";
+      })
+      .finally(() => {
+        saveResponseButton.disabled = !selectedMood; 
+        saveResponseButton.textContent = "Save Your Thoughts";
+        setTimeout(() => saveStatusDisplay.textContent = "", 5000);
+      });
+      // --- Ensured NO fetch() call to Google Forms is here ---
+    });
+  </script>
+</body>
+</html>
