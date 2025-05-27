@@ -2,15 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+  <meta name="description" content="A personal mood tracker to express your feelings." />
   <title>Babes Mood Tracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
   <style>
     * {
       box-sizing: border-box;
     }
     body {
       margin: 0;
-      font-family: "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      font-family: "Quicksand", "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -21,8 +23,20 @@
       padding: 15px;
       text-align: center;
     }
+    .opening-quote {
+      font-family: 'Dancing Script', cursive;
+      font-size: clamp(1.1rem, 4vw, 1.4rem);
+      color: #e3536b; /* Using a theme color */
+      margin-bottom: 20px;
+      padding: 10px;
+      background-color: rgba(255, 255, 255, 0.7);
+      border-radius: 8px;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
     h1 {
-      margin-top: 15px;
+      margin-top: 0; /* Adjusted as quote is above */
       margin-bottom: 20px;
       font-size: clamp(1.6rem, 5vw, 2rem);
       color: #4a4a4a;
@@ -98,32 +112,59 @@
         box-shadow: 0 0 10px rgba(255, 139, 160, 0.4);
         outline: none;
     }
-    button {
+    .action-buttons { /* Container for save and call buttons */
+        display: flex;
+        flex-direction: column; /* Stack buttons on small screens */
+        gap: 10px; /* Space between buttons */
+        align-items: center;
+        width: 100%;
+        max-width: 500px;
+    }
+    button, .call-button { /* Apply similar base styling */
+      width: 100%; /* Make buttons take full width of container */
+      max-width: 300px; /* Max width for larger screens */
       margin-top: 5px;
-      padding: 14px 30px;
-      background-image: linear-gradient(45deg, #ff758c 0%, #ffc3a0 100%);
+      padding: 14px 25px; /* Adjusted padding */
       color: white;
       border: none;
       border-radius: 25px;
       cursor: pointer;
       font-size: clamp(1rem, 4vw, 1.1rem);
       font-weight: 600;
-      transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+      transition: transform 0.2s ease-out, box-shadow 0.2s ease-out, background-color 0.2s;
+      text-decoration: none; /* For <a> styled as button */
+      display: inline-block; /* For <a> styled as button */
+    }
+    #saveResponseButton {
+      background-image: linear-gradient(45deg, #ff758c 0%, #ffc3a0 100%);
       box-shadow: 0 3px 7px rgba(255,100,130,0.35);
     }
-    button:hover:not(:disabled) {
+    #saveResponseButton:hover:not(:disabled) {
       transform: translateY(-2px) scale(1.03);
       box-shadow: 0 5px 12px rgba(255,100,130,0.45);
     }
-    button:active:not(:disabled) {
+    #saveResponseButton:active:not(:disabled) {
         transform: translateY(0px) scale(0.98);
         box-shadow: 0 2px 5px rgba(255,100,130,0.3);
     }
-    button:disabled {
+    #saveResponseButton:disabled {
         background-image: none;
         background-color: #cccccc;
         cursor: not-allowed;
         box-shadow: none;
+    }
+    .call-button { /* Styling for the "Can't Control" call button */
+      background-color: #d9534f; /* A distinct, urgent color like red/orange */
+      box-shadow: 0 3px 7px rgba(200,50,50,0.35);
+    }
+    .call-button:hover {
+      background-color: #c9302c;
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 5px 12px rgba(200,50,50,0.45);
+    }
+    .call-button:active {
+      transform: translateY(0px) scale(0.98);
+      box-shadow: 0 2px 5px rgba(200,50,50,0.3);
     }
     .save-status {
         margin-top: 15px;
@@ -135,6 +176,8 @@
   </style>
 </head>
 <body>
+  <div class="opening-quote" id="openingQuoteDisplay">
+    </div>
   <h1>How Are You Feeling, My Love?</h1>
 
   <div class="emojis">
@@ -151,15 +194,19 @@
   </div>
 
   <textarea id="babesResponseInput" placeholder="Share your thoughts here, my beautiful..."></textarea>
-  <button id="saveResponseButton">Save Your Thoughts</button>
+  
+  <div class="action-buttons">
+    <button id="saveResponseButton">Save Your Thoughts</button>
+    <a href="tel:+918905507092" class="call-button" id="callMeButton">Nahi Ho Raha Button</a>
+  </div>
+
   <div class="save-status" id="save-status-display"></div>
 
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 
   <script>
-    // Your web app's Firebase configuration (FROM YOUR FIREBASE PROJECT)
-    // Make sure to replace these placeholders with your actual Firebase config
+    // Your web app's Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyCHqhrAzrqHOZwZw0r8b-iAzAqq3sGSiB0", // YOUR ACTUAL API KEY
       authDomain: "test-26-05.firebaseapp.com",       // YOUR ACTUAL AUTH DOMAIN
@@ -172,17 +219,30 @@
 
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore(); // Get a Firestore database instance
+    const db = firebase.firestore();
 
+    const openingQuoteDisplay = document.getElementById("openingQuoteDisplay");
     const emotionTextDisplay = document.getElementById("emotion-text-display");
     const quoteDisplay = document.getElementById("quote-display");
     const babesResponseInput = document.getElementById("babesResponseInput");
     const allEmojiElements = document.querySelectorAll(".emoji-container");
     const saveResponseButton = document.getElementById("saveResponseButton");
     const saveStatusDisplay = document.getElementById("save-status-display");
+    // const callMeButton = document.getElementById("callMeButton"); // Not strictly needed if using href directly
     const bodyElement = document.body;
 
     let selectedMood = "";
+
+    const moodSharingQuotes = [
+        "Sharing your feelings is a sign of strength, my love.",
+        "I'm always here to listen, no matter the mood.",
+        "Your emotions are valid and important to me.",
+        "Every mood you share helps me understand you more.",
+        "Never hesitate to tell me how you're truly feeling.",
+        "Your heart is safe with me; share what's in it.",
+        "Expressing yourself is a beautiful thing.",
+        "I'm here for all of it - the sunshine and the rain."
+    ];
 
     const moodDetails = {
       excited: { bgColor: "#fff1c9", text: "Excited!", quote: "So thrilled to see you shining so bright! ✨" },
@@ -191,6 +251,20 @@
       crying:  { bgColor: "#cce2ff", text: "Feeling Sad...", quote: "It's okay to cry, my love. Let it out, I'm listening. 💔" },
       angry:   { bgColor: "#ffcccc", text: "Feeling Angry?", quote: "It's okay to feel this way. Talk to me about it. ❤️‍🔥" }
     };
+
+    // Function to display a random opening quote
+    function displayRandomOpeningQuote() {
+        if (openingQuoteDisplay) {
+            const randomIndex = Math.floor(Math.random() * moodSharingQuotes.length);
+            openingQuoteDisplay.innerHTML = `"${moodSharingQuotes[randomIndex]}"`;
+        }
+    }
+
+    // Display quote when the page loads
+    document.addEventListener('DOMContentLoaded', () => {
+        displayRandomOpeningQuote();
+        checkSaveButtonState(); // Initial check for the save button
+    });
 
     allEmojiElements.forEach(emojiContainer => {
       emojiContainer.addEventListener("click", () => {
@@ -213,7 +287,6 @@
     function checkSaveButtonState() {
         saveResponseButton.disabled = !selectedMood;
     }
-    checkSaveButtonState();
 
     saveResponseButton.addEventListener("click", () => {
       const herResponse = babesResponseInput.value;
@@ -234,7 +307,6 @@
       saveResponseButton.textContent = "Saving...";
       saveStatusDisplay.textContent = "";
 
-      // --- This is the Firebase Saving Logic ---
       db.collection("moodEntries").add({
         mood: selectedMood,
         note: herResponse,
@@ -255,8 +327,10 @@
         saveResponseButton.textContent = "Save Your Thoughts";
         setTimeout(() => saveStatusDisplay.textContent = "", 5000);
       });
-      // --- Ensured NO fetch() call to Google Forms is here ---
     });
+
+    // Note: The call button uses a direct href="tel:..." so it doesn't strictly need a JS listener
+    // unless you wanted to add more complex behavior or analytics.
   </script>
 </body>
 </html>
